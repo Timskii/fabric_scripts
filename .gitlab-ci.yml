@@ -1,0 +1,39 @@
+
+stages:
+  - cert-generation
+  - start-compose
+  - start-channels-peers
+  - install-chaincodes
+
+before_script:
+  - docker info
+  - docker-compose --version
+  - echo $USER
+  
+cert-generation:
+  stage: cert-generation
+  script:
+    - ./configtxgen.sh
+  only:
+    - master
+
+start-compose:
+  stage: start-compose
+  script:
+    - ./start.sh
+  only:
+    - master
+
+start-channels-peers:
+  stage: start-channels-peers
+  script:
+    - ./channel.sh
+  only:
+    - master
+
+install-chaincodes:
+  stage: install-chaincodes
+  script:
+    - ./install_chaincode.sh
+  only:
+    - master

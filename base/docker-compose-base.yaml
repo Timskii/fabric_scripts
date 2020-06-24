@@ -1,0 +1,114 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  orderer.kz:
+    container_name: orderer.kz
+    image: hyperledger/fabric-orderer:1.4.7
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+    - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ../crypto-config/ordererOrganizations/kz/orderers/orderer.kz/msp:/var/hyperledger/orderer/msp
+    - ../crypto-config/ordererOrganizations/kz/orderers/orderer.kz/tls/:/var/hyperledger/orderer/tls
+    - orderer.kz:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
+
+  peer0.org1.kz:
+    container_name: peer0.org1.kz
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org1.kz
+      - CORE_PEER_ADDRESS=peer0.org1.kz:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org1.kz:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.kz:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/org1.kz/peers/peer0.org1.kz/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/org1.kz/peers/peer0.org1.kz/tls:/etc/hyperledger/fabric/tls
+        - peer0.org1.kz:/var/hyperledger/production
+    ports:
+      - 7051:7051
+      - 7053:7053
+
+  peer1.org1.kz:
+    container_name: peer1.org1.kz
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.org1.kz
+      - CORE_PEER_ADDRESS=peer1.org1.kz:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.kz:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.kz:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/org1.kz/peers/peer1.org1.kz/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/org1.kz/peers/peer1.org1.kz/tls:/etc/hyperledger/fabric/tls
+        - peer1.org1.kz:/var/hyperledger/production
+
+    ports:
+      - 8051:7051
+      - 8053:7053
+
+  peer0.org2.kz:
+    container_name: peer0.org2.kz
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org2.kz
+      - CORE_PEER_ADDRESS=peer0.org2.kz:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.kz:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org2.kz:7051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/org2.kz/peers/peer0.org2.kz/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/org2.kz/peers/peer0.org2.kz/tls:/etc/hyperledger/fabric/tls
+        - peer0.org2.kz:/var/hyperledger/production
+    ports:
+      - 9051:7051
+      - 9053:7053
+
+  peer1.org2.kz:
+    container_name: peer1.org2.kz
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.org2.kz
+      - CORE_PEER_ADDRESS=peer1.org2.kz:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org2.kz:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.kz:7051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/org2.kz/peers/peer1.org2.kz/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/org2.kz/peers/peer1.org2.kz/tls:/etc/hyperledger/fabric/tls
+        - peer1.org2.kz:/var/hyperledger/production
+    ports:
+      - 10051:7051
+      - 10053:7053
