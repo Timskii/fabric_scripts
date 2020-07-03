@@ -39,6 +39,7 @@ services:
     volumes:
         - ./channel-artifacts:/etc/hyperledger/configtx
         - ./crypto-config/ordererOrganizations/kz/orderers/orderer.kz/:/etc/hyperledger/msp/orderer
+        - ./orderer.kz:/var/hyperledger/production/orderer
     networks:
       - basic
 
@@ -68,6 +69,7 @@ services:
         - ./crypto-config/peerOrganizations/bank1.kz/peers/peer0.bank1.kz/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/bank1.kz/users:/etc/hyperledger/msp/users
         - ./channel-artifacts:/etc/hyperledger/configtx
+        - ./peer.bank1.kz:/var/hyperledger/production/orderer
     depends_on:
       - orderer.kz
   #    - couchdb
@@ -100,6 +102,7 @@ services:
         - ./crypto-config/peerOrganizations/bank2.kz/peers/peer0.bank2.kz/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/bank2.kz/users:/etc/hyperledger/msp/users
         - ./channel-artifacts:/etc/hyperledger/configtx
+        - ./peer.bank2.kz:/var/hyperledger/production/orderer
     depends_on:
       - orderer.kz
  #     - couchdb
@@ -132,6 +135,7 @@ services:
         - ./crypto-config/peerOrganizations/bank3.kz/peers/peer0.bank3.kz/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/bank3.kz/users:/etc/hyperledger/msp/users
         - ./channel-artifacts:/etc/hyperledger/configtx
+        - ./peer.bank3.kz:/var/hyperledger/production/orderer
     depends_on:
       - orderer.kz
 #      - couchdb
