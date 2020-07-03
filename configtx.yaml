@@ -18,7 +18,7 @@ Organizations:
     - &OrdererOrg
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: OrdererMSP
+        Name: OrdererOrg
 
         # ID to load the MSP definition as
         ID: OrdererMSP
@@ -255,6 +255,17 @@ Orderer: &OrdererDefaults
         # NOTE: Use IP:port notation
         Brokers:
             - 127.0.0.1:9092
+
+    EtcdRaft:
+        # The set of Raft replicas for this network. For the etcd/raft-based
+        # implementation, we expect every replica to also be an OSN. Therefore,
+        # a subset of the host:port items enumerated in this list should be
+        # replicated under the Orderer.Addresses key above.
+        Consenters:
+            - Host: orderer.kz
+              Port: 7050
+              ClientTLSCert: crypto-config/ordererOrganizations/kz/orderers/orderer.kz/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/kz/orderers/orderer.kz/tls/server.crt
 
     # Organizations is the list of orgs which are defined as participants on
     # the orderer side of the network
