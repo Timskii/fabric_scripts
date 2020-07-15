@@ -70,6 +70,7 @@ services:
         - ./crypto-config/peerOrganizations/bank1.kz/users:/etc/hyperledger/msp/users
         - ./channel-artifacts:/etc/hyperledger/configtx
         - ./peer.bank1.kz:/var/hyperledger/production/orderer
+        - ../chaincode:/var/hyperledger/production/chaincodes/
     depends_on:
       - orderer.kz
   #    - couchdb
@@ -170,7 +171,7 @@ services:
     command: /bin/bash
     volumes:
         - /var/run/:/host/var/run/
-        - ../vat-chaincode/:/opt/gopath/src/github.com/chaincode/
+        - ../chaincode/:/opt/gopath/src/github.com/chaincode/
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/configtx/
     networks:
