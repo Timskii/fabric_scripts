@@ -1,0 +1,8 @@
+.DS_Store
+channel-artifacts/
+crypto-config/
+fabric-ca-server/
+orderer.kz/
+peer.bank1.kz/
+peer.bank2.kz/
+peer.bank3.kz/

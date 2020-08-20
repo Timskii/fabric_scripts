@@ -8,7 +8,7 @@ fi
 
 ./bin/cryptogen generate --config=./crypto-config.yaml
 
-./bin/configtxgen -profile ThreeOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block -channelID sys-channel1
+./bin/configtxgen -profile ThreeOrgsOrdererGenesis -channelID channel0 -outputBlock ./channel-artifacts/genesis.block
 
 ./bin/configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID channel1
 

@@ -19,6 +19,6 @@
 #docker exec -e "CORE_PEER_ADDRESS=peer.bank1.kz:7051" -e "CORE_PEER_LOCALMSPID=Bank1MSP" -e "CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/bank1.kz/users/Admin@bank1.kz/msp" cli peer chaincode instantiate -o orderer.kz:7050  -C mychannel -n listorder -l golang -v 1 -c '{"Args":["init"]}' 
 
 
-cd ../vat-chaincode
+cd ../chaincode
 
 ./install_all_cc.sh

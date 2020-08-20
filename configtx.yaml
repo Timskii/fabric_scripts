@@ -49,14 +49,6 @@ Organizations:
         ID: Bank1MSP
 
         MSPDir: crypto-config/peerOrganizations/bank1.kz/msp
-
-        AnchorPeers:
-            # AnchorPeers defines the location of peers which can be used
-            # for cross org gossip communication.  Note, this value is only
-            # encoded in the genesis block in the Application section context
-            - Host: peer.bank1.kz
-              Port: 7051
-
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
         #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
@@ -66,19 +58,26 @@ Organizations:
                 Rule: "OR('Bank1MSP.admin', 'Bank1MSP.peer', 'Bank1MSP.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('Bank1MSP.admin', 'Bank1MSP.client')"
+                Rule: "OR('Bank1MSP.admin', 'Bank1MSP.peer', 'Bank1MSP.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('Bank1MSP.admin')"
+                Rule: "OR('Bank1MSP.admin', 'Bank1MSP.peer', 'Bank1MSP.client')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('Bank1MSP.peer')"
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer.bank1.kz
+              Port: 7051
+
 
     - &bank2
         Name: Bank2MSP
         ID: Bank2MSP
         MSPDir: crypto-config/peerOrganizations/bank2.kz/msp
-        AnchorPeers:
-            - Host: peer.bank2.kz
-              Port: 7051
-
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
         #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
@@ -93,14 +92,16 @@ Organizations:
                 Type: Signature
                 Rule: "OR('Bank2MSP.admin')"
 
+        AnchorPeers:
+            - Host: peer.bank2.kz
+              Port: 7051
+
+
+
     - &bank3
         Name: Bank3MSP
         ID: Bank3MSP
         MSPDir: crypto-config/peerOrganizations/bank3.kz/msp
-        AnchorPeers:
-            - Host: peer.bank3.kz
-              Port: 7051
-
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
         #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
@@ -114,6 +115,12 @@ Organizations:
             Admins:
                 Type: Signature
                 Rule: "OR('Bank3MSP.admin')"
+
+        AnchorPeers:
+            - Host: peer.bank3.kz
+              Port: 7051
+
+
 
 ################################################################################
 #
@@ -213,8 +220,15 @@ Application: &ApplicationDefaults
         Admins:
             Type: ImplicitMeta
             Rule: "MAJORITY Admins"
+        LifecycleEndorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
 
-
+    Capabilities:
+        <<: *ApplicationCapabilities
 ################################################################################
 #
 #   SECTION: Orderer
